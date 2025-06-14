@@ -1,7 +1,28 @@
+const MoodEntry = require('../models/MoodEntry');
+const { analyzeText } = require('../services/geminiService');
+
 // Stubs for mood-related controller functions
 exports.checkIn = async (req, res) => {
-  // TODO: Accept text/voice, call Gemini API, store in DB, return analysis & suggestions
-  res.json({ message: 'Check-in endpoint' });
+  try {
+    const { text } = req.body;
+    // Call Gemini API stub
+    const analysis = await analyzeText(text);
+    // Save to DB
+    const entry = new MoodEntry({
+      userId: null, // TODO: Replace with actual user ID after auth
+      date: new Date(),
+      text,
+      emotion: analysis.emotion,
+      sentimentScore: analysis.sentimentScore,
+      triggers: analysis.triggers,
+      suggestions: [], // TODO: Add suggestions logic
+      habits: {}
+    });
+    await entry.save();
+    res.json({ success: true, analysis });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 };
 
 exports.getTrends = async (req, res) => {
@@ -22,4 +43,13 @@ exports.exportData = async (req, res) => {
 exports.updateHabits = async (req, res) => {
   // TODO: Update user habits
   res.json({ message: 'Habits endpoint' });
+};
+
+exports.getAllEntries = async (req, res) => {
+  try {
+    const entries = await require('../models/MoodEntry').find({}).sort({ date: -1 });
+    res.json({ success: true, entries });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 };

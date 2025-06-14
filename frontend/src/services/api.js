@@ -16,3 +16,8 @@ export async function fetchSuggestions() {
   const res = await fetch('/api/mood/suggestions');
   return res.json();
 }
+
+export async function fetchAllEntries() {
+  const res = await fetch('/api/mood/all');
+  return res.json();
+}

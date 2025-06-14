@@ -1,6 +1,7 @@
 import React from 'react';
 import CheckInForm from './components/CheckInForm';
 import { submitCheckIn } from './services/api';
+import Dashboard from './components/Dashboard';
 
 function App() {
   const handleCheckIn = async (text) => {
@@ -12,7 +13,8 @@ function App() {
     <div>
       <h1>AI Mental Health Assistant</h1>
       <CheckInForm onSubmit={handleCheckIn} />
-      {/* TODO: Add dashboard, suggestions, etc. */}
+      <Dashboard />
+      {/* TODO: Add more advanced features */}
     </div>
   );
 }
